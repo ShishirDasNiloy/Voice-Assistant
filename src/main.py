@@ -1,5 +1,5 @@
-import pyttsx3 # convert text to speect
-import speech_recognition as sr # voice recognising module
+import pyttsx3  # convert text to speect
+import speech_recognition as sr  # voice recognising module
 import datetime
 import wikipedia
 import webbrowser
@@ -7,28 +7,34 @@ import datetime
 import pyjokes
 import wolframalpha
 
-#Shishir Das Niloy
+# Shishir Das Niloy
 # sapi5 - this is microsoft sprrech api
 # using female voice
-engine = pyttsx3.init('sapi5') 
+engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
-engine.setProperty('voice',voices[1].id) 
+engine.setProperty('voice', voices[1].id)
+print(voices)
 
-# setting the browser
-webbrowser.register('chrome',None,webbrowser.BackgroundBrowser("C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
-browser = webbrowser.get('chrome')
+# setting up the specific browser
+# webbrowser.register('chrome', None, webbrowser.BackgroundBrowser(
+#     "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe"))
+# browser = webbrowser.get('chrome')
+
+# default browser
+browser = webbrowser
 
 
 def speak(audio):
-    engine.say(audio) # this convert text to speech
-    engine.runAndWait() # make speech audible
+    engine.say(audio)  # this convert text to speech
+    engine.runAndWait()  # make speech audible
+
 
 def dotalk():  # starting speeches
     hour = int(datetime.datetime.now().hour)
-    if hour>=6 and hour<12:
+    if hour >= 6 and hour < 12:
         speak("Good Morning")
 
-    elif hour>=12 and hour<18:
+    elif hour >= 12 and hour < 18:
         speak("Good Afternoon")
 
     else:
@@ -36,8 +42,9 @@ def dotalk():  # starting speeches
 
     speak("Hello. I am Nili your personal voice assistant. I am here to help you. What can I do for you?")
 
-def listenMe(): #takes input from mic and return string output  
-    
+
+def listenMe():  # takes input from mic and return string output
+
     r = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
@@ -47,21 +54,22 @@ def listenMe(): #takes input from mic and return string output
     try:
         print("Recognizing...")
         query = r.recognize_google(audio, language='en-uk')
-        print(f"User: {query}\n")    
-    
+        print(f"User: {query}\n")
+
     except Exception as e:
         print("I can't understand. Please say that again?")
         return "None"
     return query
-    
+
+
 if __name__ == "__main__":
     dotalk()
-    while True: # infinity loop
-        query = listenMe().lower() # convert the speech in lower case for better result
+    while True:  # infinity loop
+        query = listenMe().lower()  # convert the speech in lower case for better result
 
         # using wikipia module finding information
         if "tell me about" in query:
-            query = query.replace("tell me about","")
+            query = query.replace("tell me about", "")
             speak(f'Searching {query}')
             print(f"User: Searching {query}\n")
             results = wikipedia.summary(query, sentences=3)
@@ -73,7 +81,7 @@ if __name__ == "__main__":
             browser.open("https://www.youtube.com/")
 
         elif 'open wikipedia' in query:
-            speak("opening wikipedia" )
+            speak("opening wikipedia")
             browser.open("https://www.wikipedia.org/")
 
         elif 'open stack overflow' in query:
@@ -104,14 +112,15 @@ if __name__ == "__main__":
             query = query.replace("search youtube", "")
             print(f"User: {query}\n")
             speak('Searching youtube...')
-            browser.open(f"https://www.youtube.com/results?search_query={query}")
-       
+            browser.open(
+                f"https://www.youtube.com/results?search_query={query}")
+
         # speak time
         elif 'the time' in query:
-            now = datetime.datetime.now().strftime("%H:%M:%S") 
-            print(str(now)) 
+            now = datetime.datetime.now().strftime("%H:%M:%S")
+            print(str(now))
             speak(f"The time is {now}")
-        
+
         # finding location on google map
         elif "find location of" in query:
             query = query.replace("find location of", "")
@@ -140,39 +149,36 @@ if __name__ == "__main__":
             file = open("shishir.txt", "r")
             print(file.read())
             speak(file.read(6))
-        
+
         # pyjokes module telling jokes
         elif 'joke' in query:
-            jokes =pyjokes.get_joke()
+            jokes = pyjokes.get_joke()
             print(jokes)
             speak(jokes)
 
         # basic chatting
         elif 'how are you' in query:
             speak("I am fine. How are you?")
- 
+
         elif 'fine' in query or "good" in query:
             speak("It's great to know that your fine")
-        
+
         elif 'your name' in query:
             speak("My name is Nili")
-        
+
         elif 'nice name' in query:
             speak("Thaks, that's so nice to hear")
-        
+
         elif "who are you" in query:
             speak("I am your voice assistant Nili")
 
-        #wolframakpha module
+        # wolframakpha module
         elif "what is" in query or "who is" in query:
-            app_id =  "3Q69KP-Y542R4GWQ4"
+            app_id = "3Q69KP-Y542R4GWQ4"
             client = wolframalpha.Client(app_id)
             res = client.query(query)
             try:
-                print (next(res.results).text)
-                speak (next(res.results).text)
+                print(next(res.results).text)
+                speak(next(res.results).text)
             except StopIteration:
-                print ("No results")
-
-        
- 
+                print("No results")
